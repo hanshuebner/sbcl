@@ -171,6 +171,20 @@
                           ;; of the old sb-grovel scheme.
                           ((array (unsigned 8)) port "u_int16_t" "sin_port")
                           ((array (unsigned 8)) addr "struct in_addr" "sin_addr")))
+ (:structure in6-addr ("struct in6_addr"
+                       ((array (unsigned 8)) addr "unsigned char" "s6_addr[16]")))
+ (:structure sockaddr-in6 ("struct sockaddr_in6"
+                           #+darwin ((unsigned 8) len "__uint8_t" "sin_len")
+                           (integer family "sa_family_t" "sin6_family")
+                           ;; These two could be in-port-t and
+                           ;; in-addr-t, but then we'd throw away the
+                           ;; convenience (and byte-order agnosticism)
+                           ;; of the old sb-grovel scheme.
+                           ((array (unsigned 8)) port "u_int16_t" "sin6_port")
+                           ((array (unsigned 8)) flowinfo "u_int32_t" "sin6_flowinfo")
+
+                           ((array (unsigned 8)) addr "struct in_addr6" "sin6_addr")
+                           ((array (unsigned 8)) scope-id "u_int32_t" "sin6_scope_id")))
  (:structure sockaddr-un ("struct sockaddr_un"
                           (integer family "sa_family_t" "sun_family")
                           (c-string path "char" "sun_path")))

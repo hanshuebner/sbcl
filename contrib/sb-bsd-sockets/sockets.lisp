@@ -137,11 +137,11 @@ values"))
 
 (defmethod socket-connect ((socket socket) &rest peer)
   (with-sockaddr-for (socket sockaddr peer)
-    (if (= (sockint::connect (socket-file-descriptor socket)
-                             sockaddr
-                             (size-of-sockaddr socket))
-           -1)
-        (socket-error "connect"))))
+    (when (= (sockint::connect (socket-file-descriptor socket)
+                               sockaddr
+                               (size-of-sockaddr socket))
+             -1)
+      (socket-error "connect"))))
 
 (defgeneric socket-peername (socket)
   (:documentation "Return the socket's peer; depending on the address

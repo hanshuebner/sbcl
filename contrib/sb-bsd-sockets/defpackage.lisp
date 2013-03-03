@@ -5,7 +5,7 @@
   (:use "COMMON-LISP" "SB-ALIEN" "SB-EXT"))
 
 (defpackage "SB-BSD-SOCKETS"
-  (:export socket local-socket local-abstract-socket inet-socket
+  (:export socket local-socket local-abstract-socket inet-socket inet6-socket
            make-inet-socket
            socket-bind socket-accept socket-connect
            socket-send socket-receive
