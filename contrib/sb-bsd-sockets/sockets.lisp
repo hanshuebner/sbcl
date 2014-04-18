@@ -15,7 +15,7 @@
 (defclass socket ()
   ((file-descriptor :initarg :descriptor
                     :reader socket-file-descriptor)
-   (family :initform (error "No socket family")
+   (family :initform (error "No socket family") ; subclasses supply initforms
            :reader socket-family)
    (protocol :initarg :protocol
              :reader socket-protocol
@@ -29,7 +29,9 @@ protocol. Other values are used as-is.")
    #+win32
    (non-blocking-p :type (member t nil) :initform nil)
    (stream))
-  (:documentation "Common base class of all sockets, not meant to be
+  (:default-initargs
+   :type (sb-int:missing-arg))
+  (:documentation "Common superclass of all sockets, not meant to be
 directly instantiated.")))
 
 (defmethod print-object ((object socket) stream)
@@ -64,7 +66,7 @@ directly instantiated.")))
                                     ((:datagram) sockint::sock-dgram)
                                     ((:stream) sockint::sock-stream))
                                   proto-num))))
-      (if (= fd -1) (socket-error "socket"))
+      (when (= fd -1) (socket-error "socket"))
       (setf (slot-value socket 'file-descriptor) fd
             (slot-value socket 'protocol) proto-num
             (slot-value socket 'type) type)
@@ -525,7 +527,7 @@ request an input stream and get an output stream in response\)."
 
 #+sbcl
 (defun socket-error (where)
-  ;; FIXME: Our Texinfo documentation extracter need at least his to spit
+  ;; FIXME: Our Texinfo documentation extracter need at least this to spit
   ;; out the signature. Real documentation would be better...
   ""
   (let* ((errno (socket-errno))
